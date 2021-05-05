@@ -1,5 +1,9 @@
 #include "Game.h"
 
+#include <stdio.h>
+
+#include "globals.h"
+
 Game game = { 0 };
 
 void Game_Initialize()
@@ -7,8 +11,10 @@ void Game_Initialize()
 	SDL_Init(SDL_INIT_VIDEO);
 	
 	Renderer_Initialize();
+	World_Initialize();
 
 	game.isRunning = 1;
+	game.timestep = 0.005f;
 }
 
 void Game_Run()
@@ -28,15 +34,21 @@ void Game_Run_Emscripten()
 
 void Game_Loop()
 {
-	SDL_Event e;
-	while (SDL_PollEvent(&e))
+	clock_t currentTime = clock();
+	float dt = (float) (currentTime - game.previousTime) / CLOCKS_PER_SEC;
+	game.previousTime = currentTime;
+	game.stackedTime += dt;
+
+	Input_PollEvents();
+
+	while (game.stackedTime > game.timestep)
 	{
-		if (e.type == SDL_QUIT)
-		{
-			game.isRunning = 0;
-		}
+		game.stackedTime -= game.timestep;
+
+		World_Update();
 	}
 
+	renderer.lag = game.stackedTime / game.timestep;
 	Renderer_Render();
 }
 

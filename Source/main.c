@@ -1,5 +1,9 @@
 #include "SDL.h"
 
+#include "globals.h"
+
+#include "Game.h"
+
 int main(int argc, char* argv[])
 {
     Game_Initialize();

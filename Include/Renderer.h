@@ -7,6 +7,8 @@ typedef struct
 {
 	SDL_Window* window;
 	SDL_Renderer* rendererSDL;
+
+	float lag;
 } Renderer;
 
 extern Renderer renderer;

@@ -1,13 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "SDL.h"
-
-#include "Renderer.h"
+#include <time.h>
 
 typedef struct
 {
 	int isRunning;
+
+	clock_t previousTime;
+	float timestep;
+	float stackedTime;
 } Game;
 
 extern Game game;
