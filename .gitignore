@@ -1,2 +1,4 @@
 builds/
 premake5.lua
+obj/
+Makefile

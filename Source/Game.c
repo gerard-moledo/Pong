@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "emscripten.h"
+
 #include "globals.h"
 
 Game game = { 0 };
@@ -28,7 +30,7 @@ void Game_Run()
 void Game_Run_Emscripten()
 {
 #ifdef __EMSCRIPTEN__
-	emscripten_run_main_loop()
+	emscripten_set_main_loop(Game_Loop, 0, 1);
 #endif
 }
 
