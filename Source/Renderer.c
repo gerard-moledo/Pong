@@ -17,6 +17,8 @@ void Renderer_Render()
 
 	Paddle_Render(&world.player1);
 
+	Ball_Render(&world.ball);
+
 	SDL_RenderPresent(renderer.rendererSDL);
 }
 

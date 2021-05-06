@@ -46,6 +46,7 @@ void Game_Loop()
 		game.stackedTime -= game.timestep;
 
 		World_Update();
+		World_PhysicsUpdate();
 	}
 
 	renderer.lag = game.stackedTime / game.timestep;

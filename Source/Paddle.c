@@ -10,11 +10,11 @@ Paddle Paddle_Initialize(Actor actor)
 	{
 		paddle.x = 20.f;
 		paddle.y = 300.f;
-		paddle.width = 20.f;
+		paddle.width = 10.f;
 		paddle.height = 100.f;
 	}
 
-
+	Paddle_UpdateBody(&paddle);
 
 	return paddle;
 }

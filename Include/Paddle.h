@@ -7,6 +7,8 @@ typedef enum { actor_player1, actor_player2, actor_computer } Actor;
 
 typedef struct
 {
+	Actor actor;
+
 	float x;
 	float y;
 	float xPrev;
