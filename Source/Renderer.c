@@ -10,9 +10,9 @@ void Renderer_Initialize()
 	renderer.rendererSDL = SDL_CreateRenderer(renderer.window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-void Renderer_Render(float lag)
+void Renderer_Render()
 {
-	SDL_SetRenderDrawColor(renderer.rendererSDL, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer.rendererSDL, 0, 0, 0, 255);
 	SDL_RenderClear(renderer.rendererSDL);
 
 	Paddle_Render(&world.player1);
