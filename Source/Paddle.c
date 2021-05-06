@@ -8,10 +8,20 @@ Paddle Paddle_Initialize(Actor actor)
 
 	if (actor == actor_player1)
 	{
-		paddle.x = 20.f;
-		paddle.y = 300.f;
-		paddle.width = 10.f;
-		paddle.height = 100.f;
+		paddle.actor = actor_player1;
+		paddle.transform.x = 25.f;
+		paddle.transform.y = 350.f;
+		paddle.transform.xExtents = 5.f;
+		paddle.transform.yExtents = 50.f;
+	}
+
+	if (actor == actor_player2)
+	{
+		paddle.actor = actor_player2;
+		paddle.transform.x = 800.f - 25.f;
+		paddle.transform.y = 350.f;
+		paddle.transform.xExtents = 5.f;
+		paddle.transform.yExtents = 50.f;
 	}
 
 	Paddle_UpdateBody(&paddle);
@@ -21,18 +31,18 @@ Paddle Paddle_Initialize(Actor actor)
 
 void Paddle_Update(Paddle* paddle)
 {
-	paddle->xPrev = paddle->x;
-	paddle->yPrev = paddle->y;
+	paddle->xPrev = paddle->transform.x;
+	paddle->yPrev = paddle->transform.y;
 
-	if (input.up)
+	if (input.up && paddle->actor == actor_player1 || input.up2 && paddle->actor == actor_player2)
 	{
-		paddle->y -= game.timestep * 500;
-		if (paddle->y < 0) paddle->y = 0;
+		paddle->transform.y -= game.timestep * 500;
+		if (paddle->transform.y < 0) paddle->transform.y = 0;
 	}
-	if (input.down)
+	if (input.down && paddle->actor == actor_player1 || input.down2 && paddle->actor == actor_player2)
 	{
-		paddle->y += game.timestep * 500;
-		if (paddle->y > 600 - paddle->height) paddle->y = 600 - paddle->height;
+		paddle->transform.y += game.timestep * 500;
+		if (paddle->transform.y > 600 - paddle->transform.yExtents) paddle->transform.y = 600 - paddle->transform.yExtents;
 	}
 
 	Paddle_UpdateBody(paddle);
@@ -40,22 +50,22 @@ void Paddle_Update(Paddle* paddle)
 
 void Paddle_Render(Paddle* paddle)
 {
-	float xInterpolated = paddle->xPrev + renderer.lag * (paddle->x - paddle->xPrev);
-	float yInterpolated = paddle->yPrev + renderer.lag * (paddle->y - paddle->yPrev);
+	float xInterpolated = paddle->xPrev + renderer.lag * (paddle->transform.x - paddle->xPrev);
+	float yInterpolated = paddle->yPrev + renderer.lag * (paddle->transform.y - paddle->yPrev);
 
 	SDL_SetRenderDrawColor(renderer.rendererSDL, 255, 255, 255, 255);
 	SDL_Rect renderRect;
-	renderRect.x = (int) xInterpolated;
-	renderRect.y = (int) yInterpolated;
-	renderRect.w = (int) paddle->width;
-	renderRect.h = (int) paddle->height;
+	renderRect.x = (int) xInterpolated - paddle->transform.xExtents;
+	renderRect.y = (int) yInterpolated - paddle->transform.yExtents;
+	renderRect.w = (int) paddle->transform.xExtents * 2;
+	renderRect.h = (int) paddle->transform.yExtents * 2;
 	SDL_RenderFillRect(renderer.rendererSDL, &renderRect);
 }
 
 void Paddle_UpdateBody(Paddle* paddle)
 {
-	paddle->body.top = paddle->y;
-	paddle->body.left = paddle->x;
-	paddle->body.bottom = paddle->y + paddle->height;
-	paddle->body.right = paddle->x + paddle->width;
+	paddle->body.top = paddle->transform.y - paddle->transform.yExtents;
+	paddle->body.left = paddle->transform.x - paddle->transform.xExtents;
+	paddle->body.bottom = paddle->transform.y + paddle->transform.yExtents;
+	paddle->body.right = paddle->transform.x + paddle->transform.xExtents;
 }

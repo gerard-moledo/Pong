@@ -28,10 +28,16 @@ void Input_HandleKey(SDL_KeyboardEvent e)
 	{
 		if (e.keysym.sym == SDLK_w) input.up = 1;
 		if (e.keysym.sym == SDLK_s) input.down = 1;
+
+		if (e.keysym.sym == SDLK_UP) input.up2 = 1;
+		if (e.keysym.sym == SDLK_DOWN) input.down2 = 1;
 	}
 	if (e.type == SDL_KEYUP)
 	{
 		if (e.keysym.sym == SDLK_w) input.up = 0;
 		if (e.keysym.sym == SDLK_s) input.down = 0;
+
+		if (e.keysym.sym == SDLK_UP) input.up2 = 0;
+		if (e.keysym.sym == SDLK_DOWN) input.down2 = 0;
 	}
 }

@@ -7,16 +7,16 @@
 Ball Ball_Initialize(float xVelocity, float yVelocity)
 {
 	Ball ball = { 0 };
-	ball.x = 400;
-	ball.y = 300;
-	ball.xPrev = ball.x;
-	ball.yPrev = ball.y;
+	ball.transform.x = 400;
+	ball.transform.y = 300;
+	ball.xPrev = ball.transform.x;
+	ball.yPrev = ball.transform.y;
 
 	ball.xVelocity = xVelocity;
 	ball.yVelocity = yVelocity;
 
-	ball.xExtents = 4.f;
-	ball.yExtents = 4.f;
+	ball.transform.xExtents = 4.f;
+	ball.transform.yExtents = 4.f;
 
 	Ball_UpdateBody(&ball);
 
@@ -25,20 +25,20 @@ Ball Ball_Initialize(float xVelocity, float yVelocity)
 
 void Ball_Update(Ball* ball)
 {
-	ball->xPrev = ball->x;
-	ball->yPrev = ball->y;
-	ball->x += ball->xVelocity * game.timestep;
-	ball->y += ball->yVelocity * game.timestep;
+	ball->xPrev = ball->transform.x;
+	ball->yPrev = ball->transform.y;
+	ball->transform.x += ball->xVelocity * game.timestep;
+	ball->transform.y += ball->yVelocity * game.timestep;
 
-	if (fabsf(ball->x - 400) > 400)
+	if (fabsf(ball->transform.x - 400) > 400)
 	{
-		ball->x = 400.f;
-		ball->y = 300.f;
-		ball->xPrev = ball->x;
-		ball->yPrev = ball->y;
+		ball->transform.x = 400.f;
+		ball->transform.y = 300.f;
+		ball->xPrev = ball->transform.x;
+		ball->yPrev = ball->transform.y;
 		ball->xVelocity = -200.f;
 	}
-	if (fabsf(ball->y - 300) > 300)
+	if (fabsf(ball->transform.y - 300) > 300)
 	{
 		ball->yVelocity *= -1;
 	}
@@ -46,37 +46,38 @@ void Ball_Update(Ball* ball)
 	Ball_UpdateBody(ball);
 }
 
-void Ball_PhysicsUpdate(Ball* ball, CollisionData hit)
+void Ball_PhysicsUpdate(Ball* ball, CollisionData hit, Transform other)
 {
-	if (hit.side == side_right && ball->xVelocity < 0)
+	if (hit.side == side_right && ball->xVelocity < 0 || hit.side == side_left && ball->xVelocity > 0)
 	{
-		world.ball.xVelocity *= -1;
+		ball->xVelocity *= -1;
+		ball->yVelocity = (ball->transform.y - other.y) / (other.yExtents) * 300.f;
 	}
 	if (hit.side == side_top && ball->yVelocity > 0 || hit.side == side_bottom && ball->yVelocity < 0)
 	{
-		world.ball.yVelocity *= -1;
-		world.ball.xVelocity *= -2;
+		ball->yVelocity *= -1.4f;
+		ball->xVelocity *= -2;
 	}
 }
 
 void Ball_Render(Ball* ball)
 {
-	float xInterpolated = ball->xPrev + renderer.lag * (ball->x - ball->xPrev);
-	float yInterpolated = ball->yPrev + renderer.lag * (ball->y - ball->yPrev);
+	float xInterpolated = ball->xPrev + renderer.lag * (ball->transform.x - ball->xPrev);
+	float yInterpolated = ball->yPrev + renderer.lag * (ball->transform.y - ball->yPrev);
 
 	SDL_SetRenderDrawColor(renderer.rendererSDL, 255, 255, 255, 255);
 	SDL_Rect renderRect;
-	renderRect.x = (int) (xInterpolated - ball->xExtents);
-	renderRect.y = (int) (yInterpolated - ball->yExtents);
-	renderRect.w = (int) ball->xExtents * 2;
-	renderRect.h = (int) ball->yExtents * 2;
+	renderRect.x = (int) (xInterpolated - ball->transform.xExtents);
+	renderRect.y = (int) (yInterpolated - ball->transform.yExtents);
+	renderRect.w = (int) ball->transform.xExtents * 2;
+	renderRect.h = (int) ball->transform.yExtents * 2;
 	SDL_RenderFillRect(renderer.rendererSDL, &renderRect);
 }
 
 void Ball_UpdateBody(Ball* ball)
 {
-	ball->body.top = ball->y - ball->yExtents;
-	ball->body.left = ball->x - ball->xExtents;
-	ball->body.bottom = ball->y + ball->yExtents;
-	ball->body.right = ball->x + ball->xExtents;
+	ball->body.top = ball->transform.y - ball->transform.yExtents;
+	ball->body.left = ball->transform.x - ball->transform.xExtents;
+	ball->body.bottom = ball->transform.y + ball->transform.yExtents;
+	ball->body.right = ball->transform.x + ball->transform.xExtents;
 }

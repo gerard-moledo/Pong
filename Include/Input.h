@@ -6,7 +6,9 @@
 typedef struct
 {
 	int up;
+	int up2;
 	int down;
+	int down2;
 } Input;
 
 extern Input input;

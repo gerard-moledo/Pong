@@ -16,6 +16,7 @@ void Renderer_Render()
 	SDL_RenderClear(renderer.rendererSDL);
 
 	Paddle_Render(&world.player1);
+	Paddle_Render(&world.player2);
 
 	Ball_Render(&world.ball);
 

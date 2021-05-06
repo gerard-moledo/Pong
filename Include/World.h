@@ -7,6 +7,8 @@
 typedef struct
 {
 	Paddle player1;
+	Paddle player2;
+
 	Ball ball;
 } World;
 

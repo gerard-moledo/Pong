@@ -5,6 +5,14 @@ typedef enum { false = 0, true = 1 } bool;
 
 typedef struct
 {
+	float x;
+	float y;
+	float xExtents;
+	float yExtents;
+} Transform;
+
+typedef struct
+{
 	float top;
 	float left;
 	float bottom;

@@ -9,13 +9,10 @@ typedef struct
 {
 	Actor actor;
 
-	float x;
-	float y;
+	Transform transform;
+
 	float xPrev;
 	float yPrev;
-
-	float width;
-	float height;
 
 	AABB body;
 } Paddle;
